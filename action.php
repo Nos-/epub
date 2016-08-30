@@ -15,7 +15,7 @@
 		/**
 			* Register callbacks
 		*/
-		function register($controller) { 
+		function register(Doku_Event_Handler $controller) { 
 			$controller->register_hook( 'TPL_METAHEADER_OUTPUT', 'AFTER', $this, 'loadScript');
             $controller->register_hook('TPL_ACT_RENDER', 'BEFORE', $this, 'create_ebook_button');
 			$controller->register_hook('TPL_ACT_RENDER', 'AFTER', $this, 'get_epub');
@@ -91,7 +91,7 @@
        $button_name = $this->getLang('button_remove');
        $button="<p><form class='button'>";       
        $button .= "<div class='no' id='epub_remove_button'><input type='button' value='$button_name' class='button' title='start'  onclick=\"epub_remove_creator('$id');\"/></div></form>";
-	   $button .= '</br>'. $this->locale_xhtml('remove') . '</p>'; 	   
+	   $button .= '</br>'. $this->locale_xhtml('remove'); 	   
        echo $button;
 
 		}

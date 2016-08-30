@@ -79,28 +79,20 @@
 			if(!$title) $title = $src;
 		    $external = false;       
             $src = trim($src);
+            $out = "";
             if(strpos($src,'http://') === 0) $external = true;
             if($external && !$this->allow_url_fopen)  {
                 $link = $this->create_external_link($src);
                 return $this->_formatLink($link);                
             }
-			$src = $this->copy_media($src,$external);
-			
-			if($align == 'center'){
-				$out .= '<div align="center" style="text-align: center">';
-			}
+			$src = $this->copy_media($src,$external);			
+
 			if(strpos($mtype[1],'image') !== false)       {	             
-				$out .= $this->set_image($src,$width,$height);                
+				$out .= $this->set_image($src,$width,$height,$align);                
 			}
 			else {		 		 
 				$out .= "<a href='$src'>$title</a>";
 			}
-			
-			
-			if($align == 'center'){
-				$out .= '</div>';
-			}
-			
 			return $out;
 		}
 		
@@ -230,7 +222,7 @@
 			}
 			elseif($link['class'] != 'media') {   //  or urlextern	or samba share or . . .	
                 $out = $this->set_footnote($link,trim($link['url']));		// creates an entry in output for the link  with a live footnote to the link	
-                if($link['type'] == 'ext_media') {
+                if(isset($link['type']) && $link['type'] == 'ext_media') {
                     $this->doc .= $out;
                 }
                 else return $out;			  
@@ -340,14 +332,17 @@
 			return false;
 		}
 	
-		function set_image($img,$width=null,$height=null) {
+		function set_image($img,$width=null,$height=null,$align=null) {
 			$w="";
 			$h="";
 			if($width)   $w= ' width="' . $width . '"';
 			if($height)   $h= ' height="' .$height . '"';
             $img = $this->clean_image_link($img);
-			//echo hsc('<img src="' . $img . '"' .  "$h $w " . ' alt="'. $img . '" class="media" />') ."\n";
-			return '<img src="' . $img . '"' .  "$h $w " . ' alt="'. $img . '" class="media" />';
+            $class='media';
+            if($align) {
+                $class .= $align;
+            }			
+			return '<img src="' . $img . '"' .  "$h $w " . ' alt="'. $img . '" class="' .  $class . '" />';
 		}
 	
         function plugin($name,$data) {		
